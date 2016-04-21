@@ -31,7 +31,9 @@ public class Seller implements Serializable{
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	private String name;
+	private String password;
 	private double rate;
+	@Column(unique=true)
 	private String tel;
 	@Column(length=1023)
 	private String dishesListJson;
@@ -40,6 +42,12 @@ public class Seller implements Serializable{
 	@Transient
 	private ObjectMapper objectMapper;
 	
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
 	public void setDishesListJson() {
 		
 		try {

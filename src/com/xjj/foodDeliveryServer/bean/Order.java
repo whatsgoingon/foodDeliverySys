@@ -37,10 +37,21 @@ public class Order implements Serializable{
 	@Column(length=2047)
 	private String dishAmountMapJson;
 	private Date time;
+	private int status;
 	private Double cost;
 	@Transient
 	private ObjectMapper objectMapper;
 	
+	
+	
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
 	public String getDishAmountMapJson() {
 		return dishAmountMapJson;
 	}

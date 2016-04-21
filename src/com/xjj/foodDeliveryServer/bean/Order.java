@@ -6,11 +6,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -30,7 +33,11 @@ public class Order implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
+	@OneToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name="id")
 	private User user;
+	@OneToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name="id")
 	private Seller seller;
 	@Transient
 	private Map<Dish, Integer> dishAmountMap;

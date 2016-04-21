@@ -7,6 +7,7 @@ import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Repository;
 
+import com.xjj.foodDeliveryServer.bean.Order;
 import com.xjj.foodDeliveryServer.bean.User;
 
 @Repository("userDao")
@@ -31,6 +32,17 @@ public class UserDao {
 
 	public void updateUser(User user) {
 		em.persist(user);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Order> getAllOrders(User user) {
+		// TODO Auto-generated method stub
+		String jpql = "select order from Order order where order.user=:user";
+		List<Order> list = em.createQuery(jpql).setParameter("user", user).getResultList();
+		if (list.isEmpty())
+			return null;
+		else
+			return list;
 	}
 
 }

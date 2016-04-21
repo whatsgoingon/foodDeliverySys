@@ -1,9 +1,12 @@
 package com.xjj.foodDeliveryServer.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.xjj.foodDeliveryServer.bean.Order;
 import com.xjj.foodDeliveryServer.bean.User;
 import com.xjj.foodDeliveryServer.dao.UserDao;
 
@@ -40,5 +43,10 @@ public class UserService {
 	public void update(User user) {
 		// TODO Auto-generated method stub
 		userDao.updateUser(user);
+	}
+
+	public List<Order> getAllOrders(User user) {
+		// TODO Auto-generated method stub
+		return userDao.getAllOrders(user);
 	}
 }

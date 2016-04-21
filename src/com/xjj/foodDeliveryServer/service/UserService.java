@@ -35,4 +35,10 @@ public class UserService {
 		// TODO Auto-generated method stub
 		userDao.addUser(user);
 	}
+
+	@Transactional
+	public void update(User user) {
+		// TODO Auto-generated method stub
+		userDao.updateUser(user);
+	}
 }

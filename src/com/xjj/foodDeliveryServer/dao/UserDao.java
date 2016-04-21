@@ -29,4 +29,8 @@ public class UserDao {
 		em.persist(user);
 	}
 
+	public void updateUser(User user) {
+		em.persist(user);
+	}
+
 }

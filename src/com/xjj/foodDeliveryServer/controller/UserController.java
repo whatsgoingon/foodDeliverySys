@@ -58,7 +58,9 @@ public class UserController {
 	
 	
 	@RequestMapping(value="/update", method = RequestMethod.POST, produces="application/json; charset=utf-8")
+	@ResponseBody
 	public User update(User user){
+		userService.update(user);
 		return null;
 	}
 }

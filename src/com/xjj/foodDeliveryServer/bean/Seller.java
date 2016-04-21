@@ -32,6 +32,7 @@ public class Seller implements Serializable{
 	private Integer id;
 	private String name;
 	private String password;
+	private String pic;
 	private double rate;
 	@Column(unique=true)
 	private String tel;
@@ -42,6 +43,12 @@ public class Seller implements Serializable{
 	@Transient
 	private ObjectMapper objectMapper;
 	
+	public String getPic() {
+		return pic;
+	}
+	public void setPic(String pic) {
+		this.pic = pic;
+	}
 	public String getPassword() {
 		return password;
 	}

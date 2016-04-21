@@ -2,7 +2,7 @@ package com.xjj.foodDeliveryServer.bean;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 

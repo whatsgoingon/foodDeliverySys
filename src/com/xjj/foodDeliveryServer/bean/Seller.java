@@ -43,7 +43,7 @@ public class Seller implements Serializable{
 	@Transient
 	private List<Dish> dishesList;
 	@Transient
-	private ObjectMapper objectMapper;
+	private ObjectMapper objectMapper = new ObjectMapper();;
 	
 	
 	
@@ -75,7 +75,6 @@ public class Seller implements Serializable{
 	public Seller() {
 		// TODO Auto-generated constructor stub
 		dishesList = new ArrayList<>();
-		objectMapper = new ObjectMapper();
 		isPassed = false;
 	}
 
@@ -112,8 +111,13 @@ public class Seller implements Serializable{
 	}
 
 	public List<Dish> getDishesList() {
+		if(dishesListJson==null){
+			return new ArrayList<>();
+		}
 		
 		try {
+			System.out.println("not null");
+			System.out.println(dishesListJson);
 			Dish[] dishArray = objectMapper.readValue(dishesListJson, Dish[].class);
 			return Arrays.asList(dishArray);
 		} catch (JsonParseException e) {

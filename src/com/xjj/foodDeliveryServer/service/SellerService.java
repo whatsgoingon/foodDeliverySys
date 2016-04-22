@@ -1,5 +1,6 @@
 package com.xjj.foodDeliveryServer.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.xjj.foodDeliveryServer.bean.Dish;
 import com.xjj.foodDeliveryServer.bean.Order;
 import com.xjj.foodDeliveryServer.bean.Seller;
+import com.xjj.foodDeliveryServer.dao.DishDao;
 import com.xjj.foodDeliveryServer.dao.SellerDao;
 import com.xjj.foodDeliveryServer.variables.QueueToExamine;
 
@@ -16,6 +18,8 @@ import com.xjj.foodDeliveryServer.variables.QueueToExamine;
 public class SellerService {
 	@Autowired(required=true)
 	private SellerDao sellerDao;
+	@Autowired(required=true)
+	private DishDao dishDao;
 
 	public Seller getSeller(String tel, String password) {
 		Seller seller = sellerDao.findSeller(tel);
@@ -37,10 +41,12 @@ public class SellerService {
 
 	@Transactional
 	public void addDish(Seller seller, Dish dish) {
-		List<Dish> list = seller.getDishesList();
+		dish.setSeller(seller);
+		List<Dish> list = new ArrayList<>(seller.getDishesList());
 		list.add(dish);
 		seller.setDishesList(list);
-		sellerDao.updateSeller(seller);
+		seller.setDishesListJson();
+		sellerDao.updateSellerDishes(seller);
 	}
 
 	@Transactional
@@ -51,6 +57,10 @@ public class SellerService {
 
 	public List<Seller> getAllSellers() {
 		return sellerDao.getAll();
+	}
+
+	public Dish getDish(Integer id) {
+		return dishDao.findDishById(id);
 	}
 
 }

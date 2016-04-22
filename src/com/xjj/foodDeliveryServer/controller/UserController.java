@@ -2,6 +2,8 @@ package com.xjj.foodDeliveryServer.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,10 +34,13 @@ public class UserController {
 	 *	dataForm:	tel={tel}&password={password}
 	 *
 	 */
-	@RequestMapping(value = "/login",method=RequestMethod.POST,produces="application/json; charset=utf-8")
+	@RequestMapping(value = "/login",method=RequestMethod.POST)
 	@ResponseBody
-	public User login(String tel, String password){
-		return userService.getUser(tel, password);
+	public boolean login(String tel, String password, HttpServletRequest request){
+		User user = userService.getUser(tel, password);
+		if(user==null)return false;
+		request.getSession().setAttribute("user", user);
+		return true;
 	}
 	
 	
@@ -66,23 +71,25 @@ public class UserController {
 	}
 	
 	
-	@RequestMapping(value="/update", method = RequestMethod.POST, produces="application/json; charset=utf-8")
+	@RequestMapping(value="/update", method = RequestMethod.POST)
 	@ResponseBody
-	public User update(User user){
+	public boolean update(User user, HttpServletRequest request){
+//		User u = (User)request.getSession().getAttribute("user");
 		userService.update(user);
-		return null;
+		return true;
 	}
 	
-	@RequestMapping(value="/orders", method = RequestMethod.POST, produces="application/json; charset=utf-8")
+	@RequestMapping(value="/orders", produces="application/json; charset=utf-8")
 	@ResponseBody
-	public List<Order> getAllOrderesByUser(User user){
+	public List<Order> getAllOrderesByUser(HttpServletRequest request){
+		User user = (User)request.getSession().getAttribute("user");
 		return userService.getAllOrders(user);
 	}
 	
-	@RequestMapping(value="/cart/{userId}/{sellerId}", produces="application/json; charset=utf-8")
+	@RequestMapping(value="/cart/{sellerId}", produces="application/json; charset=utf-8")
 	@ResponseBody
-	public Order getShoppingCart(@PathVariable("userId") Integer userId, @PathVariable("sellerId") Integer sellerId){
-		User user = userService.getUserById(userId);
+	public Order getShoppingCart(@PathVariable("sellerId") Integer sellerId, HttpServletRequest request){
+		User user = (User)request.getSession().getAttribute("user");
 		Seller seller = sellerService.getSellerById(sellerId);
 		SellerUserPair pair = new SellerUserPair(seller, user);
 		return ShoppingCart.getOrderByPair(pair);

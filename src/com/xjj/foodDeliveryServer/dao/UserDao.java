@@ -31,7 +31,7 @@ public class UserDao {
 	}
 
 	public void updateUser(User user) {
-		em.persist(user);
+		em.merge(user);
 	}
 
 	@SuppressWarnings("unchecked")

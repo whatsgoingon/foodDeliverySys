@@ -30,6 +30,7 @@ public class SellerDao {
 	public List<Order> getAllOrders(Seller seller) {
 		String jpql = "select order from Order order where order.seller=:seller";
 		List<Order> list = em.createQuery(jpql).setParameter("seller", seller).getResultList();
+		System.out.println("###" + list.size());
 		if (list.isEmpty())
 			return null;
 		else
@@ -40,9 +41,12 @@ public class SellerDao {
 		return em.find(Seller.class, id);
 	}
 
-	public void updateSeller(Seller seller) {
+	public void updateSellerDishes(Seller seller) {
 		// TODO Auto-generated method stub
-		em.persist(seller);
+		em.merge(seller);
+//		String jpql = "UPDATE Seller seller SET seller.dishesListJson=:listJson where seller.id=:id";
+//		em.createQuery(jpql).setParameter("id", seller.getId()).setParameter("listJson", seller.getDishesListJson()).executeUpdate();
+		
 	}
 
 	public void addSeller(Seller seller) {

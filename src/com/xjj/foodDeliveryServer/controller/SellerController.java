@@ -2,9 +2,10 @@ package com.xjj.foodDeliveryServer.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,10 +21,15 @@ public class SellerController {
 	@Autowired(required=true)
 	private SellerService sellerService;
 
-	@RequestMapping(value="/login", method=RequestMethod.POST, produces="application/json; charset=utf-8")
+	@RequestMapping(value="/login", method=RequestMethod.POST)
 	@ResponseBody
-	public Seller login(String tel, String password){
-		return sellerService.getSeller(tel, password);
+	public boolean login(String tel, String password, HttpServletRequest request){
+		Seller seller = sellerService.getSeller(tel, password);
+		if(seller == null){
+			return false;
+		}
+		request.getSession().setAttribute("seller", seller);
+		return true;
 	}
 	
 	@RequestMapping(value="/register",method=RequestMethod.POST, produces="application/json; charset=utf-8")
@@ -32,25 +38,26 @@ public class SellerController {
 		sellerService.register(seller);
 	}
 	
-	@RequestMapping(value="/{sellerId}/orders", method=RequestMethod.POST, produces="application/json; charset=utf-8")
+	@RequestMapping(value="/orders", produces="application/json; charset=utf-8")
 	@ResponseBody
-	public List<Order> getAllOrdersBySeller(@PathVariable("sellerId") Integer id){
-		Seller seller = new Seller();
-		seller.setId(id);
+	public List<Order> getAllOrdersBySeller(HttpServletRequest request){
+		Seller seller = (Seller)request.getSession().getAttribute("seller");
+		System.out.println(seller.getName());
 		return sellerService.getAllOrders(seller);
 	}
 	
-	@RequestMapping(value="/{sellerId}/addDish", method=RequestMethod.POST)
+	@RequestMapping(value="/addDish", method=RequestMethod.POST)
 	@ResponseBody
-	public void addDish(@PathVariable("sellerId") Integer id, Dish dish){
-		Seller seller = sellerService.getSellerById(id);
+	public boolean addDish (Dish dish, HttpServletRequest request){
+		Seller seller = (Seller) request.getSession().getAttribute("seller");
 		sellerService.addDish(seller, dish);
+		return true;
 	}
 	
-	@RequestMapping(value="/{sellerId}/dishes", method=RequestMethod.POST, produces="application/json; charset=utf-8")
+	@RequestMapping(value="/dishes", produces="application/json; charset=utf-8")
 	@ResponseBody
-	public List<Dish> getAllDishesBySeller(@PathVariable("sellerId") Integer id){
-		Seller seller = sellerService.getSellerById(id);
+	public List<Dish> getAllDishesBySeller(HttpServletRequest request){
+		Seller seller = (Seller) request.getSession().getAttribute("seller");
 		return seller.getDishesList();
 	}
 	

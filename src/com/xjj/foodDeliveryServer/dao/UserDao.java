@@ -45,4 +45,9 @@ public class UserDao {
 			return list;
 	}
 
+	public User getUserById(Integer userId) {
+		// TODO Auto-generated method stub
+		return em.find(User.class, userId);
+	}
+
 }

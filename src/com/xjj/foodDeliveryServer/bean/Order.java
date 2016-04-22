@@ -45,7 +45,7 @@ public class Order implements Serializable{
 	private String dishAmountMapJson;
 	private Date time;
 	private int status;
-	private Double cost;
+	private double cost;
 	@Transient
 	private ObjectMapper objectMapper;
 	

@@ -10,14 +10,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xjj.foodDeliveryServer.bean.Order;
+import com.xjj.foodDeliveryServer.bean.Seller;
+import com.xjj.foodDeliveryServer.bean.SellerUserPair;
 import com.xjj.foodDeliveryServer.bean.User;
+import com.xjj.foodDeliveryServer.service.SellerService;
 import com.xjj.foodDeliveryServer.service.UserService;
+import com.xjj.foodDeliveryServer.variables.ShoppingCart;
 
 @Controller
 @RequestMapping(value="/user")
 public class UserController {
 	@Autowired(required=true)
 	private UserService userService;
+	@Autowired(required=true)
+	private SellerService sellerService;
 	
 	/**
 	 * 
@@ -71,5 +77,14 @@ public class UserController {
 	@ResponseBody
 	public List<Order> getAllOrderesByUser(User user){
 		return userService.getAllOrders(user);
+	}
+	
+	@RequestMapping(value="/cart/{userId}/{sellerId}", produces="application/json; charset=utf-8")
+	@ResponseBody
+	public Order getShoppingCart(@PathVariable("userId") Integer userId, @PathVariable("sellerId") Integer sellerId){
+		User user = userService.getUserById(userId);
+		Seller seller = sellerService.getSellerById(sellerId);
+		SellerUserPair pair = new SellerUserPair(seller, user);
+		return ShoppingCart.getOrderByPair(pair);
 	}
 }

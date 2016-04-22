@@ -49,4 +49,9 @@ public class UserService {
 		// TODO Auto-generated method stub
 		return userDao.getAllOrders(user);
 	}
+
+	public User getUserById(Integer userId) {
+		// TODO Auto-generated method stub
+		return userDao.getUserById(userId);
+	}
 }

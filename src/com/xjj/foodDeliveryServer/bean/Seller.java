@@ -43,7 +43,7 @@ public class Seller implements Serializable{
 	@Transient
 	private List<Dish> dishesList;
 	@Transient
-	private ObjectMapper objectMapper = new ObjectMapper();;
+	private ObjectMapper objectMapper = new ObjectMapper();
 	
 	
 	

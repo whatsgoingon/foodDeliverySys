@@ -32,10 +32,11 @@ public class SellerController {
 		return true;
 	}
 	
-	@RequestMapping(value="/register",method=RequestMethod.POST, produces="application/json; charset=utf-8")
+	@RequestMapping(value="/register",method=RequestMethod.POST)
 	@ResponseBody
-	public void register(Seller seller){
+	public boolean register(Seller seller){
 		sellerService.register(seller);
+		return true;
 	}
 	
 	@RequestMapping(value="/orders", produces="application/json; charset=utf-8")

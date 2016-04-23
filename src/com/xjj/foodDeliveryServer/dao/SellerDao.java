@@ -41,7 +41,7 @@ public class SellerDao {
 		return em.find(Seller.class, id);
 	}
 
-	public void updateSellerDishes(Seller seller) {
+	public void updateSeller(Seller seller) {
 		// TODO Auto-generated method stub
 		em.merge(seller);
 //		String jpql = "UPDATE Seller seller SET seller.dishesListJson=:listJson where seller.id=:id";

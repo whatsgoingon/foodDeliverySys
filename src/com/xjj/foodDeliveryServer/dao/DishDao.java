@@ -12,7 +12,7 @@ public class DishDao {
 	@PersistenceContext(name = "un")
 	private EntityManager em;
 	
-	public Dish findDishById(Integer id){
-		return em.find(Dish.class, id);
+	public Dish findDishById(String uuid){
+		return em.find(Dish.class, uuid);
 	}
 }

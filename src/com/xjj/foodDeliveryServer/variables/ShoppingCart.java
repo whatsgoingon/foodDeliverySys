@@ -7,20 +7,27 @@ import com.xjj.foodDeliveryServer.bean.Order;
 import com.xjj.foodDeliveryServer.bean.SellerUserPair;
 
 public class ShoppingCart {
-	private static Map<SellerUserPair, Order> shoppingCart = null;
+	private static Map<SellerUserPair, Order> shoppingCartMap = null;
 
-	public static Map<SellerUserPair, Order> getShoppingCart() {
-		if (shoppingCart == null) {
-			shoppingCart = new HashMap<>();
-			return shoppingCart;
+	public static Map<SellerUserPair, Order> getShoppingCartMap() {
+		if (shoppingCartMap == null) {
+			shoppingCartMap = new HashMap<>();
+			return shoppingCartMap;
 		} else
-			return shoppingCart;
+			return shoppingCartMap;
 	}
 	
-	public static Order getOrderByPair(SellerUserPair pair){
-		if (!shoppingCart.containsKey(pair)){
-			shoppingCart.put(pair, new Order());
-		}
-		return shoppingCart.get(pair);
+	public static void setShoppingCartMap(Map<SellerUserPair, Order> shoppingCartMap) {
+		ShoppingCart.shoppingCartMap = shoppingCartMap;
 	}
+	
+//	public static Order getOrderByPair(SellerUserPair pair){
+//		if (shoppingCart == null) {
+//			shoppingCart = new HashMap<>();
+//		}
+//		if (!shoppingCart.containsKey(pair)){
+//			shoppingCart.put(pair, new Order());
+//		}
+//		return shoppingCart.get(pair);
+//	}
 }

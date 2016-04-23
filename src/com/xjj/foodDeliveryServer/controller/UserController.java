@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,12 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.xjj.foodDeliveryServer.bean.Dish;
 import com.xjj.foodDeliveryServer.bean.Order;
-import com.xjj.foodDeliveryServer.bean.Seller;
 import com.xjj.foodDeliveryServer.bean.SellerUserPair;
 import com.xjj.foodDeliveryServer.bean.User;
 import com.xjj.foodDeliveryServer.service.SellerService;
 import com.xjj.foodDeliveryServer.service.UserService;
+import com.xjj.foodDeliveryServer.variables.QueueToExamine;
 import com.xjj.foodDeliveryServer.variables.ShoppingCart;
 
 @Controller
@@ -36,11 +38,12 @@ public class UserController {
 	 */
 	@RequestMapping(value = "/login",method=RequestMethod.POST)
 	@ResponseBody
-	public boolean login(String tel, String password, HttpServletRequest request){
+	public User login(String tel, String password, HttpServletRequest request){
+//		System.out.println("tel: " + tel);
 		User user = userService.getUser(tel, password);
-		if(user==null)return false;
+		if(user==null)return null;
 		request.getSession().setAttribute("user", user);
-		return true;
+		return user;
 	}
 	
 	
@@ -50,11 +53,12 @@ public class UserController {
 	 *	dataForm:	tel={user.tel}&password={user.password(md5digest)}...
 	 *
 	 */
-	@RequestMapping(value = "/register",method = RequestMethod.POST,produces="application/json; charset=utf-8")
+	@RequestMapping(value = "/register",method = RequestMethod.POST)
 	@ResponseBody
-	public User register(User user){
+	public boolean register(User user){
+		System.out.println("here");
 		userService.register(user);
-		return user;
+		return true;
 	}
 	
 	/**
@@ -90,8 +94,35 @@ public class UserController {
 	@ResponseBody
 	public Order getShoppingCart(@PathVariable("sellerId") Integer sellerId, HttpServletRequest request){
 		User user = (User)request.getSession().getAttribute("user");
-		Seller seller = sellerService.getSellerById(sellerId);
-		SellerUserPair pair = new SellerUserPair(seller, user);
-		return ShoppingCart.getOrderByPair(pair);
+		SellerUserPair pair = new SellerUserPair(sellerId, user.getId());
+		return ShoppingCart.getShoppingCartMap().get(pair);
 	}
+	
+	@RequestMapping(value="/addToCart", method=RequestMethod.POST)
+	@ResponseBody
+	public boolean addToCart(Dish dish, HttpServletRequest request){
+		User user = (User)request.getSession().getAttribute("user");
+		userService.addDishToCart(dish,user);
+		return true;
+	}
+	
+	@RequestMapping(value="/cart/{sellerId}/checkout")
+	@ResponseBody
+	public boolean checkout(HttpServletRequest request, @PathVariable("sellerId") Integer sellerId){
+		User user = (User)request.getSession().getAttribute("user");
+		userService.checkout(user.getId(), sellerId);
+		return true;
+	}
+	
+	@RequestMapping(value="/orders/{orderId}/pay")
+	@ResponseBody
+	public boolean payForOrder(@PathVariable("orderId") String uuid){
+		userService.payForOrder(uuid);
+		return true;
+	}
+	@Test
+	public void Test(){
+		System.out.println(QueueToExamine.orderQueue().size());
+	}
+	
 }

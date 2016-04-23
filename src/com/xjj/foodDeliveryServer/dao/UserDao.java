@@ -17,7 +17,6 @@ public class UserDao {
 
 	@SuppressWarnings("unchecked")
 	public User findUser(String tel) {
-		System.out.println("tel: " + tel);
 		String jpql = "select user from User user where user.tel=:tel";
 		List<User> ls = em.createQuery(jpql).setParameter("tel", tel).getResultList();
 		if (ls.isEmpty())
@@ -37,8 +36,8 @@ public class UserDao {
 	@SuppressWarnings("unchecked")
 	public List<Order> getAllOrders(User user) {
 		// TODO Auto-generated method stub
-		String jpql = "select order from Order order where order.user=:user";
-		List<Order> list = em.createQuery(jpql).setParameter("user", user).getResultList();
+		String jpql = "select order from Order order where order.userId=:userId";
+		List<Order> list = em.createQuery(jpql).setParameter("userId", user.getId()).getResultList();
 		if (list.isEmpty())
 			return null;
 		else

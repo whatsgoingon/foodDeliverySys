@@ -1,32 +1,19 @@
 package com.xjj.foodDeliveryServer.bean;
 
 public class SellerUserPair {
-	private Seller seller;
-	private User user;
-	
-	public SellerUserPair(Seller seller, User user) {
+	private Integer sellerId;
+	private Integer userId;
+	public SellerUserPair(Integer sellerId, Integer userId) {
 		super();
-		this.seller = seller;
-		this.user = user;
+		this.sellerId = sellerId;
+		this.userId = userId;
 	}
-//	public Seller getSeller() {
-//		return seller;
-//	}
-//	public void setSeller(Seller seller) {
-//		this.seller = seller;
-//	}
-//	public User getUser() {
-//		return user;
-//	}
-//	public void setUser(User user) {
-//		this.user = user;
-//	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((seller == null) ? 0 : seller.hashCode());
-		result = prime * result + ((user == null) ? 0 : user.hashCode());
+		result = prime * result + ((sellerId == null) ? 0 : sellerId.hashCode());
+		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
 		return result;
 	}
 	@Override
@@ -38,17 +25,19 @@ public class SellerUserPair {
 		if (getClass() != obj.getClass())
 			return false;
 		SellerUserPair other = (SellerUserPair) obj;
-		if (seller == null) {
-			if (other.seller != null)
+		if (sellerId == null) {
+			if (other.sellerId != null)
 				return false;
-		} else if (!seller.equals(other.seller))
+		} else if (!sellerId.equals(other.sellerId))
 			return false;
-		if (user == null) {
-			if (other.user != null)
+		if (userId == null) {
+			if (other.userId != null)
 				return false;
-		} else if (!user.equals(other.user))
+		} else if (!userId.equals(other.userId))
 			return false;
 		return true;
 	}
+	
+	
 	
 }

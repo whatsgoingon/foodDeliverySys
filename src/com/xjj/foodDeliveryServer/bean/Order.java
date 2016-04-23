@@ -5,15 +5,14 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.UUID;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -31,14 +30,9 @@ public class Order implements Serializable{
 	@Transient
 	private static final long serialVersionUID = 1L;
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id;
-	@OneToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="id")
-	private User user;
-	@OneToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="id")
-	private Seller seller;
+	private String uuid;
+	private Integer userId;
+	private Integer sellerId;
 	@Transient
 	private Map<Dish, Integer> dishAmountMap;
 	@Column(length=2047)
@@ -65,7 +59,11 @@ public class Order implements Serializable{
 	
 	public void setDishAmountMapJson() {
 		try {
-			this.dishAmountMapJson = objectMapper.writeValueAsString(dishAmountMap);
+			Map<String , Integer> map = new HashMap<>();
+			for(Entry<Dish, Integer> entries: dishAmountMap.entrySet()){
+				map.put(objectMapper.writeValueAsString(entries.getKey()), entries.getValue());
+			}
+			this.dishAmountMapJson = objectMapper.writeValueAsString(map);
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -73,9 +71,11 @@ public class Order implements Serializable{
 	}
 	
 	public void calculateCost(){
+		double sum = 0;
 		for(Dish dish : dishAmountMap.keySet()){
-			cost += dish.getCost() * dishAmountMap.get(dish);
+			sum += dish.getCost() * dishAmountMap.get(dish);
 		}
+		cost = sum;
 	}
 
 	public Double getCost() {
@@ -86,30 +86,28 @@ public class Order implements Serializable{
 		dishAmountMap = new HashMap<>();
 		objectMapper = new ObjectMapper();
 		cost = 0.0;
+		status = 0;
+		uuid = UUID.randomUUID().toString();
 	}
 
-	public Integer getId() {
-		return id;
+	public String getUuid() {
+		return uuid;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public Integer getUserId() {
+		return userId;
 	}
 
-	public User getUser() {
-		return user;
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public Integer getSellerId() {
+		return sellerId;
 	}
 
-	public Seller getSeller() {
-		return seller;
-	}
-
-	public void setSeller(Seller seller) {
-		this.seller = seller;
+	public void setSellerId(Integer sellerId) {
+		this.sellerId = sellerId;
 	}
 
 	public Date getTime() {
@@ -122,6 +120,9 @@ public class Order implements Serializable{
 
 	@SuppressWarnings("unchecked")
 	public Map<Dish, Integer> getDishAmountMap() {
+		if(dishAmountMapJson==null){
+			return new HashMap<>();
+		}
 		try {
 			Map<String, Integer> map = objectMapper.readValue(dishAmountMapJson, Map.class);
 			Map<Dish, Integer> mapToReturn = new HashMap<>();
@@ -140,5 +141,6 @@ public class Order implements Serializable{
 
 	public void setDishAmountMap(Map<Dish, Integer> dishAmountMap) {
 		this.dishAmountMap = dishAmountMap;
+		setDishAmountMapJson();
 	}
 }

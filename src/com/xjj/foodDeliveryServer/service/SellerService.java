@@ -41,12 +41,12 @@ public class SellerService {
 
 	@Transactional
 	public void addDish(Seller seller, Dish dish) {
-		dish.setSeller(seller);
+		dish.setSellerId(seller.getId());
 		List<Dish> list = new ArrayList<>(seller.getDishesList());
 		list.add(dish);
 		seller.setDishesList(list);
 		seller.setDishesListJson();
-		sellerDao.updateSellerDishes(seller);
+		sellerDao.updateSeller(seller);
 	}
 
 	@Transactional
@@ -59,8 +59,8 @@ public class SellerService {
 		return sellerDao.getAll();
 	}
 
-	public Dish getDish(Integer id) {
-		return dishDao.findDishById(id);
+	public Dish getDish(String uuid) {
+		return dishDao.findDishById(uuid);
 	}
 
 }
